@@ -15,7 +15,8 @@ abstract class BaseActivity<V : ViewDataBinding> : AppCompatActivity() {
         setContentView(binding.root)
         initData()
         initView()
-        observerLiveData()
+        initBinding()
+        initViewData()
     }
 
     /**
@@ -34,9 +35,14 @@ abstract class BaseActivity<V : ViewDataBinding> : AppCompatActivity() {
     open fun initView() {}
 
     /**
-     * 观察viewModel的LiveData
+     * 双向数据绑定
      */
-    open fun observerLiveData() {}
+    open fun initBinding() {}
+
+    /**
+     * 填充视图数据
+     */
+    open fun initViewData() {}
 
     /**
      * 布局ID
