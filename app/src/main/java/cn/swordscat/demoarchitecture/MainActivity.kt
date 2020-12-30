@@ -1,17 +1,16 @@
 package cn.swordscat.demoarchitecture
 
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import cn.swordscat.arch.BaseActivity
+import cn.swordscat.arch.ArchActivity
 import cn.swordscat.arch.LOADED
 import cn.swordscat.arch.LOADING
 import cn.swordscat.demoarchitecture.databinding.ActivityMainBinding
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.impl.LoadingPopupView
 
-class MainActivity : BaseActivity<ActivityMainBinding>() {
+class MainActivity : ArchActivity<ActivityMainBinding>() {
     private val viewModel by viewModels<MainViewModel>()
 
     private lateinit var loadingPopup: LoadingPopupView

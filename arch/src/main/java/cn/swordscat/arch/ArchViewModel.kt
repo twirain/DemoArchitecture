@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
-open class BaseViewModel : ViewModel() {
+open class ArchViewModel : ViewModel() {
     // 请求加载状态
     val defaultLoadingHandler = MutableLiveData<LoadResult>()
 
@@ -43,7 +43,7 @@ open class BaseViewModel : ViewModel() {
         block: suspend () -> T,
         success: suspend (result: T) -> Unit,
         fail: suspend (exception: Throwable) -> Unit = {
-            // 执行默认动作。比如显示Toast
+            // TODO: 2020/12/30 执行默认动作。比如显示Toast
         },
         loadingTips: String? = DEFAULT_TIPS
     ) {

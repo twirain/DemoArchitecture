@@ -1,11 +1,10 @@
 package cn.swordscat.demoarchitecture
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import cn.swordscat.arch.BaseViewModel
+import cn.swordscat.arch.ArchViewModel
 import kotlinx.coroutines.delay
 
-class MainViewModel : BaseViewModel() {
+class MainViewModel : ArchViewModel() {
     val greeting = MutableLiveData("Hello World!")
     private var loadNum = 1
 
