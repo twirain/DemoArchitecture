@@ -16,7 +16,7 @@ open class ArchViewModel : ViewModel() {
      * @param result 请求结果
      * @param loadingTips 加载显示的tips
      */
-    fun <T> resultNetScope(
+    fun <T: BaseResponse> resultNetScope(
         block: suspend () -> T,
         result: (result: Result<T>) -> Unit,
         loadingTips: String? = DEFAULT_TIPS
@@ -24,8 +24,9 @@ open class ArchViewModel : ViewModel() {
         loadingTips?.let { defaultLoadingHandler.value = LoadResult(LOADING, loadingTips) }
         viewModelScope.launch {
             val tmp = kotlin.runCatching {
-                // 可在此基础上增加基础业务状态判断
-                block()
+                val response = block()
+                if (!response.isOk()) throw BusinessException(response.getErrorMsg())
+                response
             }
             loadingTips?.let { defaultLoadingHandler.value = LoadResult(LOADED, null) }
             result(tmp)
@@ -39,20 +40,27 @@ open class ArchViewModel : ViewModel() {
      * @param success 请求成功的动作
      * @param fail 请求异常的动作
      */
-    fun <T> netScope(
+    fun <T: BaseResponse> netScope(
         block: suspend () -> T,
         success: suspend (result: T) -> Unit,
         fail: suspend (exception: Throwable) -> Unit = {
-            // TODO: 2020/12/30 执行默认动作。比如显示Toast
+            // TODO: 2021/1/8 执行一些默认的错误处理
+//            LogKits.business(it.message)
+//            if (AppConfig.isDebug()) {
+//                ToastUtils.showShort("${it.message}")
+//            } else {
+//                // 正式环境下显示友好提示
+//                ToastUtils.showShort(Tips.NET_ERROR)
+//            }
         },
         loadingTips: String? = DEFAULT_TIPS
     ) {
         loadingTips?.let { defaultLoadingHandler.value = LoadResult(LOADING, loadingTips) }
         viewModelScope.launch {
             try {
-                // 可在此基础上增加基础业务状态判断
+                val result = block()
                 loadingTips?.let { defaultLoadingHandler.value = LoadResult(LOADED, null) }
-                success(block())
+                if (result.isOk()) success(result) else fail(BusinessException(result.getErrorMsg()))
             } catch (e: Exception) {
                 loadingTips?.let { defaultLoadingHandler.value = LoadResult(LOADED, null) }
                 fail(e)
